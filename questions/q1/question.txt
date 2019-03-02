@@ -1,0 +1,5 @@
+
+Task: Given a string S and a list of allowed words D, 
+      find the least number of spaces to split S 
+      into words all from D. If split is not possible,
+      print 'n/a'.

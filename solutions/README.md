@@ -5,5 +5,5 @@ Update values of 's' and 'D' to verify the code.
 Question 3:
 
 Candy Production data:
-![CandyProduction](https://www.github.com/shahnazmshariff/takehome-questions/blob/master/solutions/images/candy_production_data.png)
+![CandyProduction](https://www.raw.githubusercontent.com/shahnazmshariff/takehome-questions/blob/master/solutions/images/candy_production_data.png)
 

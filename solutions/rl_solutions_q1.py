@@ -60,7 +60,7 @@ def alternate_approach(s, D):
 
     :param s: input string
     :param D: input list of words
-    :return: tuple containing the string (split based on words in D) & minimum splits required to split the string
+    :return: list containing the split results and the minimum number of splits
     '''
     # sorting the list in place in descending order based on the length of the string
     D.sort(key=len, reverse=True)
@@ -77,30 +77,32 @@ def alternate_approach(s, D):
     # then the list of words (D) cannot be used to form the string (s)
     if count_split-1 <= 0 or len(s) > 0:
         return "n/a"
-    return ' '.join(split_str), count_split-1
+    split_str.append(count_split-1)
+    # returns list containing the split results and the minimum number of splits
+    return split_str
 
 class TestQuestionOne(unittest.TestCase):
 
     def test_alternate_solution(self):
-        self.assertEqual(alternate_approach('abcdefab', ['def', 'abc', 'ab', 'cdefab', 'ef']), ('cdefab ab', 1))
-        self.assertEqual(alternate_approach('abcdefabcdef', ['def', 'abc', 'ab', 'cd', 'ef']), ('def def abc abc', 3))
+        self.assertItemsEqual(alternate_approach('abcdefab', ['def', 'abc', 'ab', 'cdefab', 'ef']), ['ab', 'cdefab', 1])
+        self.assertItemsEqual(alternate_approach('abcdefabcdef', ['def', 'abc', 'ab', 'cd', 'ef']), ['abc', 'def','abc', 'def', 3])
         self.assertEqual(alternate_approach('shahnazmshariff', ['sh', 'naz', 'shah', 'na', 'dev']), "n/a")
-        self.assertEqual(alternate_approach('shahnaz', ['sh', 'naz', 'shah', 'na', 'dev']), ('shah naz', 1))
-        self.assertEqual(alternate_approach('abcdefab', ['def', 'abc', 'ab', 'cd', 'ef']), ('def abc ab', 2))
-        self.assertEqual(alternate_approach('cdab', ['ab', 'cd']), ('ab cd', 1))
+        self.assertItemsEqual(alternate_approach('shahnaz', ['sh', 'naz', 'shah', 'na', 'dev']), ['shah', 'naz', 1])
+        self.assertItemsEqual(alternate_approach('abcdefab', ['def', 'abc', 'ab', 'cd', 'ef']), ['abc', 'def', 'ab', 2])
+        self.assertItemsEqual(alternate_approach('cdab', ['ab', 'cd']), ['cd', 'ab', 1])
         self.assertEqual(alternate_approach("abc", ['ab', 'cd']), "n/a")
-        self.assertEqual(alternate_approach("rlsolutions", ['r', 'l', 'solutions']), ('solutions r l', 2))
-        self.assertEqual(alternate_approach("rlsolutions", ['rl', 'solutions', 'solution']),
-                         ('solutions rl', 1))
-        self.assertEqual(alternate_approach('Otorhinolaryngologist',
+        self.assertItemsEqual(alternate_approach("rlsolutions", ['r', 'l', 'solutions']), ['r', 'l', 'solutions', 2])
+        self.assertItemsEqual(alternate_approach("rlsolutions", ['rl', 'solutions', 'solution']),
+                              ['rl', 'solutions', 1])
+        self.assertItemsEqual(alternate_approach('Otorhinolaryngologist',
                                                     ["lo", "i", "s", "t", "ino", "o", "n", "o", "l", "a", "r", "gist",
                                                      "tor", "logist", "aryn", "nolary", "t", "o", "r", "h", "i", "o",
                                                      "l", "o", "g", "Otorh",
                                                      "no", "th", "o", "n", "y", "n", "g", "laryngo"]),
-                         ('laryngo logist Otorh ino', 3))
+                         ['Otorh', 'ino', 'laryngo', 'logist', 3])
         self.assertEqual(alternate_approach("", ['a']), "n/a")
         self.assertEqual(alternate_approach("verification", []), "n/a")
-        self.assertEqual(alternate_approach("abcdefgh", ['a', 'b', 'c', 'defgh']), ('defgh a b c', 3))
+        self.assertItemsEqual(alternate_approach("abcdefgh", ['a', 'b', 'c', 'defgh']), ['a' ,'b', 'c', 'defgh', 3])
 
 
 if __name__ == '__main__':

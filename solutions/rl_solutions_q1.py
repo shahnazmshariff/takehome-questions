@@ -1,4 +1,5 @@
 import unittest
+import re
 def split_string(s, D):
     '''
     :param s: input string
@@ -37,33 +38,76 @@ def get_min_spaces_from_string(s, D):
     '''
     str1 = split_string(s, D)
     if str1 is not None:
-        return len(str1.split()) - 1
+        return str1, len(str1.split()) - 1
     else:
         return "n/a"
 
+def split_str_by_position(item, s, split_str, count_split):
+    # find item in s
+    pos = s.find(item)
+    # obtain first and last part of the string (without the current item)
+    start = s[:pos]
+    end = s[pos + len(item):]
+    # update s based on start and end
+    s = str(start) + str(end)
+    split_str.append(item)
+    count_split += 1
+    return s, split_str, count_split
+
+
+def alternate_approach(s, D):
+    '''
+
+    :param s: input string
+    :param D: input list of words
+    :return: tuple containing the string (split based on words in D) & minimum splits required to split the string
+    '''
+    # sorting the list in place in descending order based on the length of the string
+    D.sort(key=len, reverse=True)
+    count_split = 0
+    split_str = []
+    for item in D:
+        # check if string in D (i.e., item) is present in s and then split s based on the start & end position of the item
+        if item in s:
+            # find all occurences of the item in s and split s that many times
+            occurences = re.findall(item, s)
+            for i in range(len(occurences)):
+                s, split_str, count_split = split_str_by_position(item, s, split_str, count_split)
+    # if the string cannot be split even partially or if string still contains some characters,
+    # then the list of words (D) cannot be used to form the string (s)
+    if count_split-1 <= 0 or len(s) > 0:
+        return "n/a"
+    return ' '.join(split_str), count_split-1
+
 class TestQuestionOne(unittest.TestCase):
 
-    def test_split_count(self):
-        self.assertEqual(get_min_spaces_from_string('shahnazmshariff', ['sh', 'naz', 'shah', 'na', 'dev']), "n/a")
-        self.assertEqual(get_min_spaces_from_string('shahnaz', ['sh', 'naz', 'shah', 'na', 'dev']), 1)
-        self.assertEqual(get_min_spaces_from_string('abcdefabcdef', ['def', 'abc', 'ab', 'cd', 'ef']), 3)
-        self.assertEqual(get_min_spaces_from_string('abcdefab', ['def', 'abc', 'ab', 'cd', 'ef']), 2)
-        self.assertEqual(get_min_spaces_from_string('cdab', ['ab', 'cd']), 1)
-        self.assertEqual(get_min_spaces_from_string("abc", ['ab', 'cd']), "n/a")
-        self.assertEqual(get_min_spaces_from_string("rlsolutions", ['r', 'l','solutions']), 2)
-        self.assertEqual(get_min_spaces_from_string("rlsolutions", ['rl', 'solutions', 'solution']), 1)
-        self.assertEqual(get_min_spaces_from_string('Otorhinolaryngologist', ["lo","i","s","t","ino","o","n","o","l","a","r","gist","tor","logist","aryn","nolary","t","o","r","h","i","o","l","o","g","Otorh",
-"no","th","o","n","y","n","g","laryngo"]), 3)
-        self.assertEqual(get_min_spaces_from_string("",['a']), "n/a")
-        self.assertEqual(get_min_spaces_from_string("verification", []), "n/a")
-        self.assertEqual(get_min_spaces_from_string("abcdefgh", ['a', 'b', 'c', 'defgh']), 3)
+    def test_alternate_solution(self):
+        self.assertEqual(alternate_approach('abcdefab', ['def', 'abc', 'ab', 'cdefab', 'ef']), ('cdefab ab', 1))
+        self.assertEqual(alternate_approach('abcdefabcdef', ['def', 'abc', 'ab', 'cd', 'ef']), ('def def abc abc', 3))
+        self.assertEqual(alternate_approach('shahnazmshariff', ['sh', 'naz', 'shah', 'na', 'dev']), "n/a")
+        self.assertEqual(alternate_approach('shahnaz', ['sh', 'naz', 'shah', 'na', 'dev']), ('shah naz', 1))
+        self.assertEqual(alternate_approach('abcdefab', ['def', 'abc', 'ab', 'cd', 'ef']), ('def abc ab', 2))
+        self.assertEqual(alternate_approach('cdab', ['ab', 'cd']), ('ab cd', 1))
+        self.assertEqual(alternate_approach("abc", ['ab', 'cd']), "n/a")
+        self.assertEqual(alternate_approach("rlsolutions", ['r', 'l', 'solutions']), ('solutions r l', 2))
+        self.assertEqual(alternate_approach("rlsolutions", ['rl', 'solutions', 'solution']),
+                         ('solutions rl', 1))
+        self.assertEqual(alternate_approach('Otorhinolaryngologist',
+                                                    ["lo", "i", "s", "t", "ino", "o", "n", "o", "l", "a", "r", "gist",
+                                                     "tor", "logist", "aryn", "nolary", "t", "o", "r", "h", "i", "o",
+                                                     "l", "o", "g", "Otorh",
+                                                     "no", "th", "o", "n", "y", "n", "g", "laryngo"]),
+                         ('laryngo logist Otorh ino', 3))
+        self.assertEqual(alternate_approach("", ['a']), "n/a")
+        self.assertEqual(alternate_approach("verification", []), "n/a")
+        self.assertEqual(alternate_approach("abcdefgh", ['a', 'b', 'c', 'defgh']), ('defgh a b c', 3))
 
 
 if __name__ == '__main__':
     # to add a custom test case, update value of s & D
-    s = 'abcdefabcd'
-    D = ['def', 'abc', 'ab', 'cd', 'ef']
-    result = get_min_spaces_from_string(s, D)
+    s = 'abcdefab'
+    D = ['def', 'abc', 'ab', 'cdefab', 'ef']
+    result = alternate_approach(s, D)
     print result
-    # run unittests 
+    # run unittests
     unittest.main()

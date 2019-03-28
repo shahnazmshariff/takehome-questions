@@ -1,6 +1,7 @@
 <h3>Question 1</h3>
 
 To run the code with custom inputs, update values of the string (s) and list of words (D) in the main function. 
+Assumption: case-sensitive solution i.e., the case is considered when the string is matched with words in the list (abc != Abc)
 
 <h3>Question 3</h3>
 
